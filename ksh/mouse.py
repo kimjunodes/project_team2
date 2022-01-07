@@ -6,6 +6,9 @@ import mediapipe as mp
 import math
 import pyautogui
 import time
+import prev
+
+n = 'mouse'
 
 def mouse():
     # cam
@@ -49,16 +52,26 @@ def mouse():
                 # move to cursor
                 if open == False:
                     pyautogui.moveTo(gumx * screenWidth, gumy * screenHeight)
-                    if dist(handLms.landmark[0].x, handLms.landmark[0].y, handLms.landmark[10].x, handLms.landmark[10].y) < dist(handLms.landmark[0].x, handLms.landmark[0].y, handLms.landmark[12].x, handLms.landmark[12].y):
-                        pyautogui.mouseDown()
+                    if dist(handLms.landmark[0].x, handLms.landmark[0].y, handLms.landmark[10].x, handLms.landmark[10].y) < \
+                    dist(handLms.landmark[0].x, handLms.landmark[0].y, handLms.landmark[12].x, handLms.landmark[12].y):
+                        # click
+                        pyautogui.mouseDown()       
                         pyautogui.mouseUp()
+                        print("click")         
                         time.sleep(1)
                     mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
+        
+        # prev.py
+
 
         # show img(cam)
-        cv2.imshow('cursor', img)
+        cv2.imshow(n, img)
         cv2.waitKey(1)
 
         # exit
         if cv2.waitKey(1) == ord('q'):
                 break
+        
+        prev.prev(n)
+
+mouse()

@@ -7,7 +7,8 @@ import math
 import mouse        # mouse.py
 import volume       # volume.py
 import video        # video.py
-
+import distance     # distance.py
+from distance import dist
 
 
 # variable
@@ -22,10 +23,6 @@ my_hands = mpHands.Hands(max_num_hands = max_num_hands,
     min_detection_confidence = 0.5,
     min_tracking_confidence = 0.5)
 mpDraw = mp.solutions.drawing_utils
-    
-# distance
-def dist(x1,y1,x2,y2):
-    return math.sqrt(math.pow(x1-x2, 2)) + math.sqrt(math.pow(y1-y2,2))
 
 # finger
 compareIndex = [[10,4],[6,8],[10,12],[14,16],[18,20]]
