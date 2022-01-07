@@ -6,7 +6,7 @@ from tensorflow.keras.models import load_model
 actions = ['come', 'away', 'spin']
 seq_length = 30
 
-model = load_model('models/model2_1.0.h5')
+model = load_model('C:/Users/rla04/Desktop/project/HSU_BIT/project_team2/cwk/cwk_2/models/model2_1.0.h5')
 
 # MediaPipe hands model
 mp_hands = mp.solutions.hands
