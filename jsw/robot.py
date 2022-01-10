@@ -52,6 +52,7 @@ while cap.isOpened():
             # Normalize v
             v = v / np.linalg.norm(v, axis=1)[:, np.newaxis]
 
+
             # Get angle using arcos of dot product
             angle = np.arccos(np.einsum('nt,nt->n',
                 v[[0,1,2,4,5,6,8,9,10,12,13,14,16,17,18],:], 

@@ -4,12 +4,17 @@
 
 # import
 import cv2
+from cvzone.HandTrackingModule import main
 import mediapipe as mp
 import math
 import distance     # distance.py
 from distance import dist
+import sign
+from sign import mainshow
 
-def prev():
+n = 'Main'
+
+def prev(location) -> str :
     # variable
     max_num_hands = 1
 
@@ -66,13 +71,14 @@ def prev():
         fimg = cv2.flip(img,1)
 
         # show img(cam)
-        cv2.imshow("Main",fimg)
+        cv2.imshow(n,fimg)
         
         # exit
         if cv2.waitKey(1) == ord('q'):
             break
             
-        if open == [False,False,False,False,False]:
-            print("back")
-
+        if open == [False,False,False,False,True]:
+            cv2.destroyWindow(n)
+            mainshow()
+            
 prev()
