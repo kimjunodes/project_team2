@@ -4,22 +4,20 @@ import math
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+from distance import dist
+
+volume_name = "volume"
 
 def volume():
-    devices = AudioUtilities.GetSpeakers()  # 오디오 받아오기
+    devices = AudioUtilities.GetSpeakers()
     interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-    volume = cast(interface, POINTER(IAudioEndpointVolume)) # 오디오 크기 조절
+    volume = cast(interface, POINTER(IAudioEndpointVolume))
 
-    cap = cv2.VideoCapture(0)   # 캠
+    cap = cv2.VideoCapture(0)
 
     mpHands = mp.solutions.hands
     my_hands = mpHands.Hands()
     mpDraw = mp.solutions.drawing_utils
-
-
-    def dist(x1, y1, x2, y2):
-        return math.sqrt(math.pow(x1-x2, 2)) + math.sqrt(math.pow(y1-y2, 2))
-
 
     while True:
         success, img = cap.read()
@@ -39,8 +37,9 @@ def volume():
                     curdist = min(0, curdist)
                     volume.SetMasterVolumeLevel(curdist, None)
                 mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
+                
 
 
         cv2.waitKey(10)
-        cv2.imshow("volume", cv2.flip(img, 1))
+        cv2.imshow(volume_name, cv2.flip(img, 1))
         cv2.waitKey(10)

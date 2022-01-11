@@ -1,20 +1,15 @@
-#prev.py
-
 #sign.py
 
 # import
 import cv2
-from cvzone.HandTrackingModule import main
 import mediapipe as mp
 import math
-import distance     # distance.py
-from distance import dist
-import sign
-from sign import mainshow
+from distance import dist   # distance.py
+import sign                 # sign.py
+import back
+prev_fun_name = "prev"
 
-n = 'Main'
-
-def prev(location) -> str :
+def prev_fun():
     # variable
     max_num_hands = 1
 
@@ -28,16 +23,13 @@ def prev(location) -> str :
         min_tracking_confidence = 0.5)
     mpDraw = mp.solutions.drawing_utils
         
-    # distance
 
     # finger
     compareIndex = [[10,4],[6,8],[10,12],[14,16],[18,20]]
 
     # thumb, index_finger, middle_finger, ring_figer, pinky (엄지 검지 중지 약지 소지)
-    open = [False,False,False,False,False]
-    gesture =  [
-                [False, False, False, False ,False, 'Back']
-                ]
+    open = [False, False, False, False, False]
+    gesture =  [[False, False, False, False, True, 'Back']]
 
 
     # angle
@@ -61,24 +53,27 @@ def prev(location) -> str :
                 for j in range(0,5):
                     if(gesture[i][j] != open[j]):
                         flag = False
+                        back.prev_fun()
                 if(flag == True):
                     # font
                     cv2.putText(img, gesture[i][5], (round(text_x)-50, round(text_y)-250),
-                                cv2.FONT_HERSHEY_PLAIN,4,(0,0,0),4)
+                                cv2.FONT_HERSHEY_PLAIN, 4, (0, 0, 0), 4)
             mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
 
         # reversal
         fimg = cv2.flip(img,1)
 
         # show img(cam)
-        cv2.imshow(n,fimg)
-        
-        # exit
+        cv2.imshow(prev_fun_name,fimg)
+
+        # gesture for motion
+        if open == [False, False, False, False, True]:
+            cv2.destroyWindow(prev_fun_name)
+            sign.sign_fun()
+
+        exit
         if cv2.waitKey(1) == ord('q'):
-            break
-            
-        if open == [False,False,False,False,True]:
-            cv2.destroyWindow(n)
-            mainshow()
-            
-prev()
+                break
+
+
+prev_fun()

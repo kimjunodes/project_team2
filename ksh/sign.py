@@ -7,12 +7,11 @@ import math
 import mouse        # mouse.py
 import volume       # volume.py
 import video        # video.py
-import distance     # distance.py
-from distance import dist
+from distance import dist   # distance.py
+import back
+mainName = "Main"
 
-n = 'Sign'
-
-def mainshow():
+def sign_fun():
     # variable
     max_num_hands = 1
 
@@ -25,6 +24,7 @@ def mainshow():
         min_detection_confidence = 0.5,
         min_tracking_confidence = 0.5)
     mpDraw = mp.solutions.drawing_utils
+        
 
     # finger
     compareIndex = [[10,4],[6,8],[10,12],[14,16],[18,20]]
@@ -70,17 +70,17 @@ def mainshow():
         fimg = cv2.flip(img,1)
 
         # show img(cam)
-        cv2.imshow(n,fimg)
+        cv2.imshow(mainName,fimg)
 
         # gesture for motion
         if open == [False,True,False,False,False]:
-            cv2.destroyWindow(n)
+            cv2.destroyWindow(mainName)
             mouse.mouse()
         if open == [False,True,True,False,False]:
-            cv2.destroyWindow(n)
-            volume.volume()
+            cv2.destroyWindow(mainName)
+            back.prev_fun()
         if open == [True,True,True,False,False]:
-            cv2.destroyWindow(n)
+            cv2.destroyWindow(mainName)
             video.video()
 
         

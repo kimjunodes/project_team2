@@ -6,6 +6,8 @@ from cvzone.HandTrackingModule import HandDetector
 import mediapipe as mp
 import cv2
 
+video_name = "video"
+
 def video():
     # variable
     LENGTH_THRESHOLD = 50
@@ -15,7 +17,7 @@ def video():
     cap_cam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
     # video location
-    cap_video = cv2.VideoCapture('D:\Pycharm\PyCharm Community Edition 2020.3.3\project_team2\ksh\sample_data\\03.mp4')
+    cap_video = cv2.VideoCapture('D:\Pycharm\PyCharm Community Edition 2020.3.3\HSU_BIT_Project\sample_data\\03.mp4')
 
     # cam size
     cap_cam.set(cv2.CAP_PROP_FRAME_WIDTH, 500)      
@@ -73,6 +75,6 @@ def video():
 
             # show img(cam)
             cv2.imshow('video', video_img)
-            cv2.imshow('cam', cam_img)
+            cv2.imshow(video_name, cam_img)
             if cv2.waitKey(1) == ord('q'):
                 break

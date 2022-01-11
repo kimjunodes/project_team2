@@ -6,9 +6,9 @@ import mediapipe as mp
 import math
 import pyautogui
 import time
-import prev
+from distance import dist
 
-n = 'mouse'
+mouse_name = "mouse"
 
 def mouse():
     # cam
@@ -25,8 +25,7 @@ def mouse():
     mpDraw = mp.solutions.drawing_utils
 
     # distance
-    def dist(x1, y1, x2, y2):
-        return math.sqrt(math.pow(x1-x2, 2)) + math.sqrt(math.pow(y1-y2, 2)) #제곱근(sqrt), 제곱(pow)
+    
 
     # performance
     while True:
@@ -52,26 +51,19 @@ def mouse():
                 # move to cursor
                 if open == False:
                     pyautogui.moveTo(gumx * screenWidth, gumy * screenHeight)
-                    if dist(handLms.landmark[0].x, handLms.landmark[0].y, handLms.landmark[10].x, handLms.landmark[10].y) < \
-                    dist(handLms.landmark[0].x, handLms.landmark[0].y, handLms.landmark[12].x, handLms.landmark[12].y):
-                        # click
-                        pyautogui.mouseDown()       
+                    if dist(handLms.landmark[0].x, handLms.landmark[0].y, handLms.landmark[10].x, handLms.landmark[10].y) < dist(handLms.landmark[0].x, handLms.landmark[0].y, handLms.landmark[12].x, handLms.landmark[12].y):
+                        pyautogui.mouseDown()
                         pyautogui.mouseUp()
-                        print("click")         
                         time.sleep(1)
                     mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
-        
-        # prev.py
-
 
         # show img(cam)
-        cv2.imshow(n, img)
+        cv2.imshow(mouse_name, img)
         cv2.waitKey(1)
+
+        #prev_fun
+        # prev_fun()
 
         # exit
         if cv2.waitKey(1) == ord('q'):
                 break
-        
-        prev.prev(n)
-
-mouse()
