@@ -16,6 +16,7 @@ devices = AudioUtilities.GetSpeakers()  # 오디오 받아오기
 interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
 volume = cast(interface, POINTER(IAudioEndpointVolume))
 
+screenWidth, screenHeight = pyautogui.size()
 
 # variable
 max_num_hands = 1
@@ -32,7 +33,6 @@ mpDraw = mp.solutions.drawing_utils
 
 def spider(cap):
     while True:
-        screenWidth, screenHeight = pyautogui.size()
         success, img = cap.read()
         h, w, c = img.shape
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -46,9 +46,9 @@ def spider(cap):
                 gumy = handLms.landmark[8].y
                 for i in range(0, 5):
                     open[i] = dist(handLms.landmark[0].x, handLms.landmark[0].y, handLms.landmark[compareIndex[i][0]].x,
-                                handLms.landmark[compareIndex[i][0]].y) < \
+                                   handLms.landmark[compareIndex[i][0]].y) < \
                               dist(handLms.landmark[0].x, handLms.landmark[0].y, handLms.landmark[compareIndex[i][1]].x,
-                                handLms.landmark[compareIndex[i][1]].y)
+                                   handLms.landmark[compareIndex[i][1]].y)
 
             for i in range(0, len(gesture)):
                 flag = True
@@ -67,11 +67,17 @@ def spider(cap):
                         time.sleep(1)
 
             mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
+
+        # reversal
         fimg = cv2.flip(img, 1)
+
+        # show img(cam)
         cv2.imshow("spider", fimg)
+        cv2.waitKey(1)
         if open == [False,False,False,False,True]:
             cv2.destroyAllWindows()
             return
+
 def vol(cap):
     while True:
         success, img = cap.read()
@@ -96,12 +102,14 @@ def vol(cap):
                     volume.SetMasterVolumeLevel(curdist, None)
                 mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
         cv2.imshow("vol_control", img)
+        cv2.waitKey(1)
         if dist(handLms.landmark[0].x, handLms.landmark[0].y, handLms.landmark[17].x,
                             handLms.landmark[17].y) < \
                        dist(handLms.landmark[0].x, handLms.landmark[0].y, handLms.landmark[20].x,
                             handLms.landmark[20].y):
             cv2.destroyAllWindows()
             return
+
 def video(cap):
     LENGTH_THRESHOLD = 50
     detector = HandDetector(detectionCon=0.8, maxHands=1)
@@ -145,8 +153,9 @@ def video(cap):
 
                 length, info, cam_img = detector.findDistance(lm_list[4], lm_list[8], cam_img)  # 엄지, 검지를 이용하여 계산
 
-                if fingers == [0, 0, 0, 0, 0]:  # 정지
-                    pass
+                if fingers == [0, 0, 0, 0, 1]:  # 정지
+                    cv2.destroyAllWindows()
+                    return
                 else:  # Play
                     if length < LENGTH_THRESHOLD:  # Navigate
                         rel_x = lm_list[4][0] / w
@@ -160,20 +169,14 @@ def video(cap):
 
                     _, video_img = cap_video.read()
                     draw_timeline(video_img, rel_x)
-
+            fimg = cv2.flip(cam_img, 1)
             cv2.imshow('video', video_img)
-            cv2.imshow('cam', cam_img)
-            if dist(handLms.landmark[0].x, handLms.landmark[0].y, handLms.landmark[17].x,
-                    handLms.landmark[17].y) < \
-                    dist(handLms.landmark[0].x, handLms.landmark[0].y, handLms.landmark[20].x,
-                         handLms.landmark[20].y):
-                cv2.destroyAllWindows()
-                return
+            cv2.imshow('cam', fimg)
+            cv2.waitKey(1)
 
 # distance
 def dist(x1, y1, x2, y2):
     return math.sqrt(math.pow(x1 - x2, 2)) + math.sqrt(math.pow(y1 - y2, 2))
-
 
 # finger
 compareIndex = [[5, 4], [6, 8], [10, 12], [14, 16], [18, 20]]
@@ -228,7 +231,9 @@ while True:
     fimg = cv2.flip(img, 1)
 
     # show img(cam)
+    cv2.waitKey(1)
     cv2.imshow("MAIN", fimg)
 
-    if cv2.waitKey(1) == ord('q'):
+    if open == [False, False, False, False, True]:
+        cv2.destroyAllWindows()
         break
