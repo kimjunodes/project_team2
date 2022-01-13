@@ -17,6 +17,7 @@ interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
 volume = cast(interface, POINTER(IAudioEndpointVolume))
 
 screenWidth, screenHeight = pyautogui.size()
+pyautogui.FAILSAFE = False
 
 # variable
 max_num_hands = 1
@@ -31,14 +32,12 @@ my_hands = mpHands.Hands(max_num_hands=max_num_hands,
                          min_tracking_confidence=0.5)
 mpDraw = mp.solutions.drawing_utils
 
-def spider(cap):
+def spider():
+    cap = cv2.VideoCapture(0)
     while True:
         success, img = cap.read()
-        h, w, c = img.shape
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         results = my_hands.process(imgRGB)
-
-        curmX, curmY = pyautogui.position()
 
         if results.multi_hand_landmarks:
             for handLms in results.multi_hand_landmarks:
@@ -78,7 +77,8 @@ def spider(cap):
             cv2.destroyAllWindows()
             return
 
-def vol(cap):
+def vol():
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
     while True:
         success, img = cap.read()
         h, w, c = img.shape
@@ -110,9 +110,11 @@ def vol(cap):
             cv2.destroyAllWindows()
             return
 
-def video(cap):
+def video():
     LENGTH_THRESHOLD = 50
     detector = HandDetector(detectionCon=0.8, maxHands=1)
+
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
     dir = os.getcwd()
     rp_dir = dir.replace('\\', '/')
@@ -214,16 +216,22 @@ while True:
             if (flag == True):
                 if gesture[i][5] == '1':
                     time.sleep(2)
+                    cap.release()
                     cv2.destroyAllWindows()
-                    spider(cap)
+                    spider()
+                    cap = cv2.VideoCapture(0)
                 elif gesture[i][5] == '2':
                     time.sleep(2)
+                    cap.release()
                     cv2.destroyAllWindows()
-                    vol(cap)
+                    vol()
+                    cap = cv2.VideoCapture(0)
                 elif gesture[i][5] == '3':
                     time.sleep(2)
+                    cap.release()
                     cv2.destroyAllWindows()
-                    video(cap)
+                    video()
+                    cap = cv2.VideoCapture(0)
 
         mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
 
@@ -233,7 +241,3 @@ while True:
     # show img(cam)
     cv2.waitKey(1)
     cv2.imshow("MAIN", fimg)
-
-    if open == [False, False, False, False, True]:
-        cv2.destroyAllWindows()
-        break
