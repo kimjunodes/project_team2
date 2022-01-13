@@ -1,11 +1,6 @@
 # main.py
 
 #import
-import sign
-import mouse
-import video
-import volume
+from s_sign import smain
 
-
-print("main")
-sign.sign()
+smain()

@@ -25,7 +25,7 @@ def mouse():
     mpDraw = mp.solutions.drawing_utils
 
     # distance
-    
+
 
     # performance
     while True:
@@ -61,8 +61,6 @@ def mouse():
         cv2.imshow(mouse_name, img)
         cv2.waitKey(1)
 
-        #prev_fun
-        # prev_fun()
 
         # exit
         if cv2.waitKey(1) == ord('q'):

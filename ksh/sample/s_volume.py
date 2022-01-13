@@ -43,3 +43,5 @@ def volume():
         cv2.waitKey(10)
         cv2.imshow(volume_name, cv2.flip(img, 1))
         cv2.waitKey(10)
+
+volume()

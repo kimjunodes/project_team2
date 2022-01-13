@@ -4,12 +4,13 @@
 import cv2
 import mediapipe as mp
 import math
+from prev_mouse import mouse       # mouse.py
+from prev_volume import volume     # volume.py
+from s_video import video       # video.py
 from distance import dist   # distance.py
-import sign                 # sign.py
-import back
-prev_fun_name = "prev"
+mainName = "Main"
 
-def prev_fun():
+def smain():
     # variable
     max_num_hands = 1
 
@@ -23,13 +24,20 @@ def prev_fun():
         min_tracking_confidence = 0.5)
     mpDraw = mp.solutions.drawing_utils
         
+    # distance
+    def dist(x1,y1,x2,y2):
+        return math.sqrt(math.pow(x1-x2, 2)) + math.sqrt(math.pow(y1-y2,2))
 
     # finger
-    compareIndex = [[10,4],[6,8],[10,12],[14,16],[18,20]]
+    compareIndex = [[5,4],[6,8],[10,12],[14,16],[18,20]]
 
     # thumb, index_finger, middle_finger, ring_figer, pinky (엄지 검지 중지 약지 소지)
-    open = [False, False, False, False, False]
-    gesture =  [[False, False, False, False, True, 'Back']]
+    open = [False,False,False,False,False]
+    gesture =  [[False,True,False,False,False,'1'],
+                [False,True,True,False,False,'2'],
+                [True,True,True,False,False,'3'],
+                [False,True,True,True,True,'4'],
+                [True,True,True,True,True, '5']]
 
 
     # angle
@@ -53,27 +61,28 @@ def prev_fun():
                 for j in range(0,5):
                     if(gesture[i][j] != open[j]):
                         flag = False
-                        back.prev_fun()
-                if(flag == True):
-                    # font
+                if(flag ==True):
                     cv2.putText(img, gesture[i][5], (round(text_x)-50, round(text_y)-250),
-                                cv2.FONT_HERSHEY_PLAIN, 4, (0, 0, 0), 4)
+                                cv2.FONT_HERSHEY_PLAIN,4,(0,0,0),4)
             mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
 
         # reversal
         fimg = cv2.flip(img,1)
 
         # show img(cam)
-        cv2.imshow(prev_fun_name,fimg)
+        cv2.imshow("MAIN",fimg)
 
         # gesture for motion
-        if open == [False, False, False, False, True]:
-            cv2.destroyWindow(prev_fun_name)
-            sign.sign_fun()
-
-        exit
+        if open == [False,True,False,False,False]:
+            cv2.destroyWindow(mainName)
+            mouse()
+        if open == [False,True,True,False,False]:
+            cv2.destroyWindow(mainName)
+            volume()
+        if open == [True,True,True,False,False]:
+            cv2.destroyWindow(mainName)
+            video()
+            
+        # exit
         if cv2.waitKey(1) == ord('q'):
                 break
-
-
-prev_fun()
