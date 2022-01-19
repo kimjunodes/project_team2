@@ -1,6 +1,3 @@
-# main.py
+from screen import screen
 
-#import
-from s_sign import smain
-
-smain()
+screen()
