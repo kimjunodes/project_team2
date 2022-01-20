@@ -1,5 +1,4 @@
-# sign_test
-
+# screen.py
 # import
 import cv2
 import mediapipe as mp
@@ -15,6 +14,28 @@ from mouse import mouse
 from video import video
 from vol import vol
 
+mouse_name = "mouse"
+max_num_hands = 1
+
+# cam
+cam = cv2.VideoCapture(0)
+
+# screen size
+screenWidth, screenHeight = pyautogui.size()
+
+pyautogui.FAILSAFE = False
+
+# mediapipe soultions
+mpHands = mp.solutions.hands
+my_hands = mpHands.Hands(max_num_hands = max_num_hands,
+    min_detection_confidence = 0.5,
+    min_tracking_confidence = 0.5)
+mpDraw = mp.solutions.drawing_utils
+
+compareIndex = [[10, 4], [6, 8], [10, 12], [14, 16], [18, 20]]
+open = [False, False, False, False, False]
+gesture = [[False, True, False, False, False, '1'],
+            [False, False, False, False, True, 'quit']]
 def screen():
     devices = AudioUtilities.GetSpeakers()  # 오디오 받아오기
     interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
@@ -26,7 +47,7 @@ def screen():
     # variable
     max_num_hands = 1
 
-    # cam
+    # camz
     cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
     # mediapipe soulutins
