@@ -28,7 +28,7 @@ my_hands = mpHands.Hands(max_num_hands = max_num_hands,
     min_tracking_confidence = 0.5)
 mpDraw = mp.solutions.drawing_utils
 if rad == "MAIN":
-    mouse_name = "mouse"
+    mouse_name = "MAIN"
     st.write(mouse_name)
 
     run = st.checkbox(mouse_name)
@@ -119,6 +119,7 @@ if rad == "A":
     compareIndex = [[10, 4], [6, 8], [10, 12], [14, 16], [18, 20]]
     open = [False, False, False, False, False]
     gesture = [[False, True, False, False, False, '1'],
+                [False, True, True, False, False, '2'],
                 [False, False, False, False, True, 'quit']]
     while run:
         success, img = cap.read()
@@ -174,10 +175,10 @@ if rad == "A":
         st.write('Stopped')
 
 if rad == "B":
-    video_name = "video"
-    st.write(video_name)
+    vol_name = "volume"
+    st.write(vol_name)
 
-    run = st.checkbox(video_name)
+    run = st.checkbox(vol_name)
     FRAME_WINDOW = st.image([])
 
     devices = AudioUtilities.GetSpeakers()  # 오디오 받아오기
@@ -218,7 +219,8 @@ if rad == "B":
                     curdist = curdist * 100
                     curdist = -96 - curdist
                     curdist = min(0, curdist)
-                    volume.SetMasterVolumeLevel(curdist, None)
+                    if curdist > -60 and curdist <0:
+                        volume.SetMasterVolumeLevel(curdist, None)
                 else:
                     continue
 
