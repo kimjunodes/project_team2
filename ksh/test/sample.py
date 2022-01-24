@@ -1,6 +1,6 @@
 import cv2
 from torch import rand
-import streamlit as st
+import streamlitTest2 as st
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume

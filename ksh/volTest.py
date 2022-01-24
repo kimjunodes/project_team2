@@ -1,7 +1,7 @@
 import cv2
 import time
 import numpy as np
-import testsample.HandTrackingModule as htm
+import HandTrackingModule as htm
 import math
 import streamlit as st
 from ctypes import cast, POINTER
@@ -13,9 +13,10 @@ from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 wCam, hCam = 640, 480
 ################################
 st.title("Webcam Test")
-FRAME_WINDOW = st.image([])
 
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+
+cap = cv2.VideoCapture(0) # , cv2.CAP_DSHOW
+FRAME_WINDOW = st.image([])
 cap.set(3, wCam)
 cap.set(4, hCam)
 pTime = 0
@@ -80,15 +81,15 @@ while True:
     cv2.putText(img, f'{int(volPer)} %', (40, 450), cv2.FONT_HERSHEY_COMPLEX,
                 1, (255, 0, 0), 3)
     cVol = int(volume.GetMasterVolumeLevelScalar() * 100)
-    st.sidebar.write(img, f'Vol Set: {int(cVol)}', (400, 50), cv2.FONT_HERSHEY_COMPLEX,
-                1, colorVol, 3)
+    # st.sidebar.write(img, f'Vol Set: {int(cVol)}', (400, 50), cv2.FONT_HERSHEY_COMPLEX,
+                # 1, colorVol, 3)
 
     # Frame rate
     cTime = time.time()
     fps = 1 / (cTime - pTime)
     pTime = cTime
-    st.sidebar.write(img, f'FPS: {int(fps)}', (40, 50), cv2.FONT_HERSHEY_COMPLEX,
-                1, (255, 0, 0), 3)
+    # st.sidebar.write(img, f'FPS: {int(fps)}', (40, 50), cv2.FONT_HERSHEY_COMPLEX,
+                # 1, (255, 0, 0), 3)
 
-    fimg = cv2.flip(img, 1)
-    FRAME_WINDOW.image(fimg)
+    cimg = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    FRAME_WINDOW.image(cimg)
