@@ -18,7 +18,7 @@ reset = np.zeros(20)
 
 st.title("Webcam Test")
 
-rad = st.sidebar.radio("Solution",["MAIN", "A", "B", "C"])
+rad = st.sidebar.radio("Solution",["MAIN", "MOUSE", "VOLUME", "C"])
 FRAME_WINDOW = st.image([])
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 
@@ -47,7 +47,7 @@ if rad == "MAIN":
             [True, True, False, False, True, 'mouse'],
             [False, False, False, False, True, 'quit']
             ]
-    while True:
+    while run:
         success, img = cap.read()
         h, w, c = img.shape
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -102,11 +102,14 @@ if rad == "MAIN":
                         # sys.exit(0)
                         print("quit")
             mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
-        
+
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         fimg = cv2.flip(img, 1)
         FRAME_WINDOW.image(fimg)
-if rad == "A":
+if rad == "MOUSE":
+    if st.button("Button"):
+        st.write("Click")
+
     mouse_name = "mouse"
     st.write(mouse_name)
 
@@ -168,13 +171,19 @@ if rad == "A":
 
             mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
 
+        pTime = 0
+        cTime = time.time()
+        fps = 1 / (cTime - pTime)
+        pTime = cTime
+        st.siderbar.write(img, f'FPS: {int(fps)}')
+
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         fimg = cv2.flip(img, 1)
         FRAME_WINDOW.image(fimg)
     else:
         st.write('Stopped')
 
-if rad == "B":
+if rad == "VOLUME":
     vol_name = "volume"
     st.write(vol_name)
 
@@ -247,3 +256,4 @@ if rad == "B":
 if rad == "C":
 
     st.write("C")
+
