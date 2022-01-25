@@ -27,8 +27,8 @@ devices = AudioUtilities.GetSpeakers()
 interface = devices.Activate(
     IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
 volume = cast(interface, POINTER(IAudioEndpointVolume))
-# volume.GetMute()
-# volume.GetMasterVolumeLevel()
+
+
 volRange = volume.GetVolumeRange()
 minVol = volRange[0]
 maxVol = volRange[1]
@@ -38,58 +38,51 @@ volPer = 0
 area = 0
 colorVol = (255, 0, 0)
 
+
 while True:
     success, img = cap.read()
-
-    # Find Hand
+    
+    # 손
     img = detector.findHands(img)
     lmList, bbox = detector.findPosition(img, draw=True)
     if len(lmList) != 0:
 
-        # Filter based on size
+        # 손 사이즈
         area = (bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) // 100
-        # print(area)
         if 250 < area < 1000:
 
-            # Find Distance between index and Thumb
+            # 엄지와 검지 사이
             length, img, lineInfo = detector.findDistance(4, 8, img)
-            # print(length)
 
-            # Convert Volume
+            # 볼륨
             volBar = np.interp(length, [50, 200], [400, 150])
             volPer = np.interp(length, [50, 200], [0, 100])
 
-            # Reduce Resolution to make it smoother
+            # 볼륨 조절
             smoothness = 10
             volPer = smoothness * round(volPer / smoothness)
 
-            # Check fingers up
+            # 올리기
             fingers = detector.fingersUp()
-            # print(fingers)
 
-            # If pinky is down set volume
-            if not fingers[4]:
+            # 약지사용
+            if not fingers[2]:
                 volume.SetMasterVolumeLevelScalar(volPer / 100, None)
                 cv2.circle(img, (lineInfo[4], lineInfo[5]), 15, (0, 255, 0), cv2.FILLED)
                 colorVol = (0, 255, 0)
             else:
                 colorVol = (255, 0, 0)
 
-    # Drawings
+    # 볼륨조절창
     cv2.rectangle(img, (50, 150), (85, 400), (255, 0, 0), 3)
     cv2.rectangle(img, (50, int(volBar)), (85, 400), (255, 0, 0), cv2.FILLED)
     cv2.putText(img, f'{int(volPer)} %', (40, 450), cv2.FONT_HERSHEY_COMPLEX,
                 1, (255, 0, 0), 3)
-    cVol = int(volume.GetMasterVolumeLevelScalar() * 100)
-    # st.sidebar.write(img, f'Vol Set: {int(cVol)}', (400, 50), cv2.FONT_HERSHEY_COMPLEX,
-                # 1, colorVol, 3)
 
-    # Frame rate
+    # 프레임
     cTime = time.time()
     fps = 1 / (cTime - pTime)
     pTime = cTime
-    # st.sidebar.write(img, f'FPS: {int(fps)}', (40, 50), cv2.FONT_HERSHEY_COMPLEX,
-                # 1, (255, 0, 0), 3)
-
+    
     cimg = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     FRAME_WINDOW.image(cimg)

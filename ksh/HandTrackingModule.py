@@ -14,17 +14,20 @@ class handDetector():
         self.mpHands = mp.solutions.hands
         self.hands = self.mpHands.Hands(self.mode, self.maxHands,self.modelComplex,
                                         self.detectionCon, self.trackCon)
-        self.mpDraw = mp.solutions.drawing_utils 
+        self.mpDraw = mp.solutions.drawing_utils # it gives small dots onhands total 20 landmark points
         self.tipIds = [4, 8, 12, 16, 20]
 
     def findHands(self,img,draw=True):
-        imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        self.results = self.hands.process(imgRGB)
-        # print(results.multi_hand_landmarks)
+        # Send rgb image to hands
+        imgRGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+        self.results = self.hands.process(imgRGB) # process the frame
+    #     print(results.multi_hand_landmarks)
 
         if self.results.multi_hand_landmarks:
             for handLms in self.results.multi_hand_landmarks:
+
                 if draw:
+                    #Draw dots and connect them
                     self.mpDraw.draw_landmarks(img,handLms,
                                                 self.mpHands.HAND_CONNECTIONS)
 

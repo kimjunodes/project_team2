@@ -11,9 +11,9 @@ from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 from distance import dist
-from mouse import mouse
-from video import video
-from vol import vol
+from test.mouse import mouse
+from test.video import video
+from test.vol import vol
 
 def screen():
     devices = AudioUtilities.GetSpeakers()  # 오디오 받아오기
